@@ -16,13 +16,14 @@ class TextNode:
 
     def __eq__(self, other) -> bool:
         return (
-        self.text == other.text
-        and self.text_type == other.text_type
-        and self.url == other.url
+            self.text == other.text
+            and self.text_type == other.text_type
+            and self.url == other.url
         )
 
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type}, {self.url}"
+
 
 def text_node_to_html_node(text_node):
     if text_node.text_type == text_type_text:
@@ -36,5 +37,7 @@ def text_node_to_html_node(text_node):
     if text_node.text_type == text_type_link:
         return LeafNode("a", text_node.text, {"href": text_node.url})
     if text_node.text_type == text_type_image:
-        return LeafNode("img", text_node.text, {"src": text_node.url, "alt": text_node.text})
+        return LeafNode(
+            "img", text_node.text, {"src": text_node.url, "alt": text_node.text}
+        )
     raise ValueError(f"Invalid text type: {text_node.text_type}")
