@@ -5,7 +5,10 @@ from textnode import (
     TextNode,
     text_type_text,
     text_type_link,
-    text_type_image
+    text_type_italic,
+    text_type_bold,
+    text_type_code,
+    text_type_image,
 )
 
 
@@ -74,7 +77,7 @@ def split_nodes_link(old_nodes):
         for link in links:
             sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
             if len(sections) != 2:
-                raise ValueError("Invalid markdown: image section not closed")
+                raise ValueError("Invalid markdown: link section not closed")
             if sections[0] != "":
                 new_nodes.append(TextNode(sections[0], text_type_text))
             new_nodes.append(
@@ -98,3 +101,13 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     matches = re.findall(r"\[(.*?)\]\((.*?)\)", text)
     return matches
+
+
+def text_to_textnodes(text):
+    nodes = [TextNode(text, text_type_text)]
+    nodes = split_nodes_delimiter(nodes, "**", text_type_bold)
+    nodes = split_nodes_delimiter(nodes, "*", text_type_italic)
+    nodes = split_nodes_delimiter(nodes, "`", text_type_code)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
